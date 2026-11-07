@@ -24,6 +24,8 @@ Your World. Your Data. Your Intelligence.
 - [عقود المكونات والأمان والبيانات](docs/contracts.md)
 - [خريطة الطريق ومعايير الإثبات](docs/roadmap.md)
 - **[خطة تنفيذ المشروع القائم](docs/existing-project-plan.md)** — المسار الحالي بعد وصول المصدر
+- [المراجعة الأمنية للنواة](docs/reviews/kernel-security-e84c96e.md)
+- [عقد الربط المقترح بين الواجهة والنواة](docs/ui-kernel-contract.md)
 - [التصور الأولي السابق للتنفيذ](docs/implementation-path.md) — غير معتمد لإعادة بناء المشروع القائم
 
 ## حدود المشروعات القائمة
