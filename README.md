@@ -32,6 +32,7 @@ Your World. Your Data. Your Intelligence.
 - [متابعة مراجعة K2: R1–R7](docs/k2-review-fixes.md) — عقود مقترحة، غير منفذة
 - [مراجعة جاهزية تنفيذ K2](docs/k2-implementation-readiness.md) — بوابات مفتوحة قبل التنفيذ
 - [سجل قرارات الوقت وrollback ومفتاح HMAC](docs/adr/k2-open-decisions.md) — بنود مفتوحة
+- [مسودة مراجعة DDL v2](docs/k2-ddl-v2-review.md) — تصميم فقط
 - [متابعة اختبار K1](docs/reviews/k1-follow-up.md)
 - [التصور الأولي السابق للتنفيذ](docs/implementation-path.md) — غير معتمد لإعادة بناء المشروع القائم
 
