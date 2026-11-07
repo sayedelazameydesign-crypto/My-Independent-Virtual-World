@@ -30,6 +30,7 @@ Your World. Your Data. Your Intelligence.
 - [المراجعة العقدية لـK2 والمضيف الموثوق](docs/k2-trusted-host-contract-review.md) — قبل التنفيذ
 - دفعة K2 المقترحة: [الملكية والتفويض](docs/memory-authorization-v2.md) · [المضيف](docs/trusted-host-v2.md) · [الترحيل](docs/migration-plan.md) · [مصفوفة القبول](docs/k2-acceptance-matrix.md)
 - [متابعة مراجعة K2: R1–R7](docs/k2-review-fixes.md) — عقود مقترحة، غير منفذة
+- [مراجعة جاهزية تنفيذ K2](docs/k2-implementation-readiness.md) — بوابات مفتوحة قبل التنفيذ
 - [متابعة اختبار K1](docs/reviews/k1-follow-up.md)
 - [التصور الأولي السابق للتنفيذ](docs/implementation-path.md) — غير معتمد لإعادة بناء المشروع القائم
 
