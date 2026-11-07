@@ -52,23 +52,54 @@ export type KernelOptions = Readonly<{
 const validIdentifier = (value: unknown): value is string =>
   typeof value === 'string' && value.length > 0 && value.length <= 128;
 
-/** Reject unknown actions and fields; copy before authorization to avoid later mutation. */
+/**
+ * Snapshot JSON-shaped data properties once, without invoking accessors.
+ * A proxy can run traps during reflection; any reflection error is denied.
+ */
 function parseActions(input: unknown): readonly Action[] | null {
-  if (!Array.isArray(input) || input.length === 0 || input.length > 20) return null;
-  const actions: Action[] = [];
-  for (const value of input) {
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-    const entry = value as Record<string, unknown>;
-    if (entry.kind === 'notes.read' && Object.keys(entry).length === 2 && validIdentifier(entry.id)) {
-      actions.push(Object.freeze({ kind: 'notes.read', id: entry.id }));
-    } else if (entry.kind === 'notes.create' && Object.keys(entry).length === 2 &&
-      typeof entry.text === 'string' && entry.text.trim().length > 0 && entry.text.length <= 4096) {
-      actions.push(Object.freeze({ kind: 'notes.create', text: entry.text }));
-    } else {
-      return null;
+  try {
+    if (!Array.isArray(input)) return null;
+    const lengthDescriptor = Object.getOwnPropertyDescriptor(input, 'length');
+    if (!lengthDescriptor || !('value' in lengthDescriptor)) return null;
+    const length: unknown = lengthDescriptor.value;
+    if (typeof length !== 'number' || !Number.isInteger(length) || length < 1 || length > 20) return null;
+    const arrayKeys = Reflect.ownKeys(input);
+    if (arrayKeys.length !== length + 1 || !arrayKeys.includes('length')) return null;
+
+    const actions: Action[] = [];
+    for (let i = 0; i < length; i++) {
+      // Inspect array elements as own data properties, not through an iterator/getter.
+      if (!arrayKeys.includes(String(i))) return null;
+      const element = Object.getOwnPropertyDescriptor(input, String(i));
+      if (!element || !('value' in element) || element.enumerable !== true) return null;
+      const value: unknown = element.value;
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+      const prototype = Object.getPrototypeOf(value);
+      if (prototype !== Object.prototype && prototype !== null) return null;
+      const keys = Reflect.ownKeys(value);
+      if (keys.length !== 2 || !keys.includes('kind')) return null;
+      const kindProperty = Object.getOwnPropertyDescriptor(value, 'kind');
+      if (!kindProperty || !('value' in kindProperty) || kindProperty.enumerable !== true) return null;
+      const kind: unknown = kindProperty.value;
+      const field = kind === 'notes.read' ? 'id' : kind === 'notes.create' ? 'text' : null;
+      if (field === null || !keys.includes(field)) return null;
+      const payloadProperty = Object.getOwnPropertyDescriptor(value, field);
+      if (!payloadProperty || !('value' in payloadProperty) || payloadProperty.enumerable !== true) return null;
+      const payload: unknown = payloadProperty.value;
+      if (kind === 'notes.read' && validIdentifier(payload)) {
+        actions.push(Object.freeze({ kind: 'notes.read', id: payload }));
+      } else if (kind === 'notes.create' && typeof payload === 'string' &&
+                 payload.trim().length > 0 && payload.length <= 4096) {
+        actions.push(Object.freeze({ kind: 'notes.create', text: payload }));
+      } else {
+        return null;
+      }
     }
+    return Object.freeze(actions);
+  } catch {
+    // Revoked proxies and throwing reflection traps are invalid, not unhandled failures.
+    return null;
   }
-  return Object.freeze(actions);
 }
 
 export class Kernel {
