@@ -26,6 +26,8 @@ Your World. Your Data. Your Intelligence.
 - **[خطة تنفيذ المشروع القائم](docs/existing-project-plan.md)** — المسار الحالي بعد وصول المصدر
 - [المراجعة الأمنية للنواة](docs/reviews/kernel-security-e84c96e.md)
 - [عقد الربط المقترح بين الواجهة والنواة](docs/ui-kernel-contract.md)
+- [تصميم الخزنة وعزل الذاكرة](docs/vault-and-memory-design.md) — مقترح غير منفذ
+- [متابعة اختبار K1](docs/reviews/k1-follow-up.md)
 - [التصور الأولي السابق للتنفيذ](docs/implementation-path.md) — غير معتمد لإعادة بناء المشروع القائم
 
 ## حدود المشروعات القائمة
