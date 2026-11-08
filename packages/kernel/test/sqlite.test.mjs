@@ -25,7 +25,7 @@ test('approved notes survive closing and reopening in a separate process', async
   store.close();
   if (process.platform !== 'win32') assert.equal(statSync(file).mode & 0o077, 0);
   const modulePath = resolve('dist/node.js');
-  const script = `import { SqliteNoteStore } from ${JSON.stringify('file://' + modulePath)}; const s = new SqliteNoteStore(process.argv[1]); console.log(JSON.stringify(await s.read('1'))); s.close();`;
+  const script = `import { SqliteNoteStore } from ${JSON.stringify(`file://${modulePath}`)}; const s = new SqliteNoteStore(process.argv[1]); console.log(JSON.stringify(await s.read('1'))); s.close();`;
   const child = spawnSync(process.execPath, ['--input-type=module', '-e', script, file], { encoding: 'utf8' });
   assert.equal(child.status, 0, child.stderr);
   assert.deepEqual(JSON.parse(child.stdout), { id: '1', text: 'بيانات دائمة' });
